@@ -4,22 +4,20 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var positions = {};
-var users = [];
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/client/');
+  res.sendfile('index.html');
 });
 
 io.on('connection', function(socket) {
   console.log('a user connected');
 
   for (var synced_draggable in positions) {
+    //console.log(positions[synced_draggable]);
     io.emit('update_position', positions[synced_draggable]);
   }
 
   socket.on('disconnect', function() {
-    users.splice(users.indexOf(socket.username), 1);
-    updateUsernames();
     console.log('user disconnected');
   });
 
@@ -29,19 +27,9 @@ io.on('connection', function(socket) {
     socket.broadcast.emit('update_position', positions[data.id]); // send `data` to all other clients
   });
 
-  socket.on('chat message', function(data) {
-    io.emit('chat message', {msg: data, user: socket.username});
+  socket.on('chat message', function(msg) {
+    io.emit('chat message', msg);
   });
-
-  socket.on('new user', function(data){
-    socket.username = data;
-    users.push(socket.username);
-    updateUsernames();
-  });
-
-  function updateUsernames(){
-    io.emit('get users', users);
-  }
 });
 
 http.listen(3000, function() {

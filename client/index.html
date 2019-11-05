@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+
+      h3 {
+        color: black;
+      }
+
+      .synced-draggable {
+        position: absolute;
+        cursor: pointer;
+        cursor: hand;
+        display: inline;
+        padding: 5px;
+      }
+
+      #messageFormArea {
+        display: none;
+      }
+
+      #messages{
+        color: red;
+      }
+
+    </style>
+  </head>
+  <body>
+
+
+    <div id="first" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable">first</div>
+    <div id="second" style="background-color: #00ccff; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <!-- <div id="third" style="background-color: #f00; border: 1px #000 solid;" class="synced-draggable">three</div> -->
+    <div id="messages" style="background-color: #f00; border: 1px #000 solid;" class="synced-draggable"><h3>ipp<h3></div>
+    <div id="vier" style="background-color: #00f; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <div id="bal" style="background-color: #0ff; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <div id="asd" style="background-color: #fff; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <div id="plant" style="background-color: transparent;" class="synced-draggable">
+      <img src="http://3e-pr0cess-s33dbank.com/thingies/aloe.png" alt="opsie"/>
+    </div>
+
+    <div id="userFormArea" class="row" >
+    <form id="userForm" action="">
+      <input id="username" autocomplete="off" type="text" /><button>login</button>
+    </form>
+    </div>
+    <div class="well">
+      <h3> Online Creatures</h3>
+      <ul class = "list-group" id="users"></ul>
+    </div>
+
+
+    <div id="messageFormArea" style="position: fixed;">
+    <form id="messageForm" style="position: fixed;" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    </div>
+
+    <script>
+    var count =0;
+    $(document).ready(function () {
+      var socket = io();
+      $('#userForm').submit(function(data){
+        var usr = $('#username').val();
+        if (usr===""){
+        } else {
+          $('#userFormArea').hide();
+          $('#messageFormArea').show();
+          socket.emit('new user', usr);
+        }
+        $('#username').val('');
+        return false;
+      });
+
+      $('#messageForm').submit(function(submit_data){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+
+      socket.on('update_position', function (data) {
+        $("#"+data.id).css({
+          left: data.x + "px",
+          top: data.y + "px"
+        });
+      });
+
+      socket.on('chat message', function(entry){
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; position: absolute;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div>'); //.text(entry.user entry.msg);
+          $($item).draggable({
+            drag: function (event, ui) {
+              var coord = $(this).position();
+              socket.emit('receive_position', {
+                id: $(this).attr('id'),
+                x: coord.left,
+                y: coord.top
+              });
+            }
+          });
+          $('#messages').append($item);
+          count++
+        });
+
+      socket.on('get users', function(data){
+        var html = '';
+        for (var i = 0; i < data.length; i++){
+          html += '<li class="list-group-item">'+data[i]+'</li>';
+        }
+        $('#users').html(html);
+      });
+
+      $(".synced-draggable").draggable({
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
+    });
+
+
+
+    </script>
+  </body>
+</html>

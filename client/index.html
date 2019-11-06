@@ -8,7 +8,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
+      body {
+        font: 13px Helvetica, Arial;
+      }
       form { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
       form input { border: 0; padding: 10px; width: 70%; margin-right: .5%; }
       form button {
@@ -32,7 +34,7 @@
       }
 
       .button {
-        width: 4%;
+        width: 5%;
         height: 29px;
         border: none;
         color: white;
@@ -40,11 +42,6 @@
         padding: 10px;
         z-index: 1;
       }
-
-      .scroll{
-           overflow-y: scroll;
-           overflow-x: hidden;
-       }
 
       .sticky {
         position: -webkit-sticky;
@@ -65,31 +62,12 @@
         bottom: 0;
       }
 
-      #white {
-        position: fixed;
-        width: 50%;
-        bottom: 38px;
-        background-color: transparent;
-        height: 85%;
-        width: 100%;
-        z-index: -1;
-      }
-
     </style>
   </head>
   <body>
-    <div id="blue" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
-      <div class="sticky" style="background-color: #00ccff;"><h3>silver<h3></div>
-    </div>
-    <div id="red" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
-      <div class="sticky" style="background-color: red;"><h3>trotter<h3></div>
-    </div>
-    <div id="yellow" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
-      <div class="sticky" style="background-color: #ffcc00;"><h3>mango<h3></div>
-    </div>
-
-    <!-- <div id="vier" style="background-color: #00f; border: 1px #000 solid;" class="synced-draggable">drag me</div>
-    <div id="bal" style="background-color: #0ff; border: 1px #000 solid;" class="synced-draggable">drag me</div> -->
+    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid;" class="synced-draggable"><h3>silver<h3></div>
+    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter<h3></div>
+    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango<h3></div>
 
     <div id="plant" style="background-color: transparent;" class="synced-draggable">
       <img src="http://3e-pr0cess-s33dbank.com/thingies/aloe.png" alt="opsie"/>
@@ -106,8 +84,6 @@
 
     </div>
 
-    <div id="white" class="scroll"></div>
-
     <div id="messageFormArea">
 
     <form id="messageForm" style="position: fixed;" action="">
@@ -116,12 +92,17 @@
       <button type="button" class="button" data-color="red" style="background-color: red;">
       <button type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
       <button type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
-      <button type="button" class="button" data-color="#ffffff" style="background-color: #ffffff;">
     </form>
     </div>
 
     <script>
     var count =0;
+    var scroll = -20;
+    var offset = 48;
+    var redEntries = [];
+    var yellowEntries = [];
+    var blueEntries = [];
+
     $(document).ready(function () {
       var socket = io();
       var $thisColor = "#00ccff";
@@ -158,13 +139,9 @@
 
       //NEW MESSAGE
       socket.on('chat message', function(entry){
-        if(entry.color == "#ffffff"){
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color: black; position: absolute; word-wrap: break-all;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div><br>');
-        } else {
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; word-wrap: break-all;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div><br>');
-        }
-          $($item).draggable({ scroll: false});
-          $($item).draggable({ containment: "parent"});
+
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; text-indent: 50px; word-wrap: break-all;" class="synced-draggable" ><strong>'+entry.user+':</strong>'+entry.msg+'</div>');
+
           $($item).draggable({
             drag: function (event, ui) {
               var coord = $(this).position();
@@ -176,18 +153,30 @@
             }
           });
 
-          if(entry.color == "#ffffff"){
-            $('#white').append($item);
-            scrollToBottom('white');
-          }else if(entry.color == "red"){
+          if(entry.color == "red"){
+            redEntries.push('#entry'+count);
             $('#red').append($item);
-            scrollToBottom('red');
+            for(i=0;i<redEntries.length;i++){
+              var $oldentry = $(redEntries[i]);
+              var $where = $(redEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
           }else if(entry.color == "#ffcc00"){
+            yellowEntries.push('#entry'+count);
             $('#yellow').append($item);
-            scrollToBottom('yellow');
+            for(i=0;i<yellowEntries.length;i++){
+              var $oldentry = $(yellowEntries[i]);
+              var $where = $(yellowEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
           }else if (entry.color == "#00ccff"){
+            blueEntries.push('#entry'+count);
             $('#blue').append($item);
-            scrollToBottom('blue');
+            for(i=0;i<blueEntries.length;i++){
+              var $oldentry = $(blueEntries[i]);
+              var $where = $(blueEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
           }
           count++;
         });
@@ -212,10 +201,10 @@
       });
     });
 
-    function scrollToBottom(id){
-      var thread = document.getElementById(id);
-      thread.scrollTop = thread.scrollHeight - thread.clientHeight;
-    }
+      // function shiftThread(thread){
+      //   var entries = document.getElementsByClassName(thread);
+      //   var first = entries[0].position();
+      // }
 
     </script>
   </body>

@@ -30,7 +30,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('chat message', function(data) {
-    io.emit('chat message', {msg: data, user: socket.username});
+    io.emit('chat message', {msg: data.text, user: socket.username, color: data.color});
   });
 
   socket.on('new user', function(data){

@@ -9,16 +9,18 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; bottom: 0; width: 100%; }
+      form { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
       form input { border: 0; padding: 10px; width: 70%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-
-      #red{ background: red;}
-      #yellow{ background: #ffcc00;}
-      #lightblue{ background: #00ccff;}
+      form button {
+        width: 9%;
+        background: #00ccff;
+        border: none;
+        padding: 10px;
+      }
 
       h3 {
         color: black;
+        font-weight: normal;
       }
 
       .synced-draggable {
@@ -29,25 +31,66 @@
         padding: 5px;
       }
 
-      #messageFormArea {
-        display: none;
+      .button {
+        width: 4%;
+        height: 29px;
+        border: none;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        z-index: 1;
       }
 
-      #messages{
-        color: red;
+      .scroll{
+           overflow-y: scroll;
+           overflow-x: hidden;
+       }
+
+      .sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        padding: 5px;
+      }
+
+      .threads{
+        height:250px;
+        width: 250px;
+        word-wrap: break-all;
+      }
+
+      #messageFormArea {
+        display: none;
+        position: fixed;
+        bottom: 0;
+      }
+
+      #white {
+        position: fixed;
+        width: 50%;
+        bottom: 38px;
+        background-color: transparent;
+        height: 85%;
+        width: 100%;
+        z-index: -1;
       }
 
     </style>
   </head>
   <body>
+    <div id="blue" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
+      <div class="sticky" style="background-color: #00ccff;"><h3>silver<h3></div>
+    </div>
+    <div id="red" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
+      <div class="sticky" style="background-color: red;"><h3>trotter<h3></div>
+    </div>
+    <div id="yellow" style="background-color: transparent; border: none;" class="synced-draggable scroll threads">
+      <div class="sticky" style="background-color: #ffcc00;"><h3>mango<h3></div>
+    </div>
 
-    <div id="first" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable">mango</div>
-    <div id="second" style="background-color: #00ccff; border: 1px #000 solid;" class="synced-draggable">mango</div>
-    <!-- <div id="third" style="background-color: #f00; border: 1px #000 solid;" class="synced-draggable">three</div> -->
-    <div id="messages" style="background-color: #f00; border: 1px #000 solid;" class="synced-draggable"><h3>ipp<h3></div>
-    <div id="vier" style="background-color: #00f; border: 1px #000 solid;" class="synced-draggable">drag me</div>
-    <div id="bal" style="background-color: #0ff; border: 1px #000 solid;" class="synced-draggable">drag me</div>
-    <div id="asd" style="background-color: #fff; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <!-- <div id="vier" style="background-color: #00f; border: 1px #000 solid;" class="synced-draggable">drag me</div>
+    <div id="bal" style="background-color: #0ff; border: 1px #000 solid;" class="synced-draggable">drag me</div> -->
+
     <div id="plant" style="background-color: transparent;" class="synced-draggable">
       <img src="http://3e-pr0cess-s33dbank.com/thingies/aloe.png" alt="opsie"/>
     </div>
@@ -58,14 +101,22 @@
     </form>
     </div>
     <div class="well">
-      <h3> Online Creatures</h3>
+      <h2> Online Creatures</h2>
       <ul class = "list-group" id="users"></ul>
+
     </div>
 
+    <div id="white" class="scroll"></div>
 
-    <div id="messageFormArea" style="position: fixed;">
+    <div id="messageFormArea">
+
     <form id="messageForm" style="position: fixed;" action="">
-      <input id="m" autocomplete="off" /><button id="red">Send</button><button id="yellow">Send</button><button id="lightblue">Send</button>
+      <input id="m" autocomplete="off"/>
+      <button id="sayit" type="submit">Send</button>
+      <button type="button" class="button" data-color="red" style="background-color: red;">
+      <button type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
+      <button type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
+      <button type="button" class="button" data-color="#ffffff" style="background-color: #ffffff;">
     </form>
     </div>
 
@@ -73,6 +124,7 @@
     var count =0;
     $(document).ready(function () {
       var socket = io();
+      var $thisColor = "#00ccff";
       $('#userForm').submit(function(data){
         var usr = $('#username').val();
         if (usr===""){
@@ -84,13 +136,19 @@
         $('#username').val('');
         return false;
       });
-  
+
+      //MESSAGEFORM SUBMIT
+      $('.button').click(function(){
+        $thisColor = $(this).data('color');
+        $('#sayit').css("background",$thisColor);
+      });
       $('#messageForm').submit(function(submit_data){
-        socket.emit('chat message', $('#m').val());
+        socket.emit('chat message', {text: $('#m').val(), color: $thisColor});
         $('#m').val('');
         return false;
       });
 
+      //DIV POSITIONS
       socket.on('update_position', function (data) {
         $("#"+data.id).css({
           left: data.x + "px",
@@ -98,8 +156,15 @@
         });
       });
 
+      //NEW MESSAGE
       socket.on('chat message', function(entry){
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; position: absolute;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div>'); //.text(entry.user entry.msg);
+        if(entry.color == "#ffffff"){
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color: black; position: absolute; word-wrap: break-all;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div><br>');
+        } else {
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; word-wrap: break-all;" class="synced-draggable"><strong>'+entry.user+':</strong>'+entry.msg+'</div><br>');
+        }
+          $($item).draggable({ scroll: false});
+          $($item).draggable({ containment: "parent"});
           $($item).draggable({
             drag: function (event, ui) {
               var coord = $(this).position();
@@ -110,8 +175,21 @@
               });
             }
           });
-          $('#messages').append($item);
-          count++
+
+          if(entry.color == "#ffffff"){
+            $('#white').append($item);
+            scrollToBottom('white');
+          }else if(entry.color == "red"){
+            $('#red').append($item);
+            scrollToBottom('red');
+          }else if(entry.color == "#ffcc00"){
+            $('#yellow').append($item);
+            scrollToBottom('yellow');
+          }else if (entry.color == "#00ccff"){
+            $('#blue').append($item);
+            scrollToBottom('blue');
+          }
+          count++;
         });
 
       socket.on('get users', function(data){
@@ -134,7 +212,10 @@
       });
     });
 
-
+    function scrollToBottom(id){
+      var thread = document.getElementById(id);
+      thread.scrollTop = thread.scrollHeight - thread.clientHeight;
+    }
 
     </script>
   </body>

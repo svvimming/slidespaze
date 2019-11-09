@@ -92,6 +92,7 @@
         height: 100%;
         background-color: transparent;
         left: 0;
+        z-index: -2;
       }
 
       #blue{
@@ -114,12 +115,13 @@
         top: 500px;
         left: 600px;
       } */
+
     </style>
   </head>
   <body>
-    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid; " class="synced-draggable"><h3>silver<h3></div>
-    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter<h3></div>
-    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango<h3></div>
+    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid; " class="synced-draggable"><h3>silver</h3></div>
+    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter</h3></div>
+    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango</h3></div>
 
     <!-- <div id="plant" style="background-color: transparent;" class="synced-draggable">
       <img src="http://3e-pr0cess-s33dbank.com/thingies/aloe.png" alt="opsie"/>
@@ -244,11 +246,20 @@
           top: data.y + "px"
         });
       });
-
+      $(".synced-draggable").draggable({
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; text-indent: 50px; word-wrap: break-all; z-index: 1;" class="synced-draggable" onclick="pinDiv(this.id)"><strong>'+entry.user+':</strong>'+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; text-indent: 50px; word-wrap: break-all; z-index: 1;" onclick="pinDiv(this.id)"><strong>'+entry.user+':</strong>'+entry.msg+'</div>');
 
           $($item).draggable({
             drag: function (event, ui) {
@@ -314,16 +325,7 @@
       //   console.log(data);
       // });
 
-      $(".synced-draggable").draggable({
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
+
     });
 
       function pinDiv(id){

@@ -5,13 +5,17 @@
     <meta charset="utf-8">
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <!-- <script src="jquery.ui.touch-punch.min.js"></script>  script for mobile touchevents -->
     <script src="/socket.io/socket.io.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
         font: 13px Helvetica, Arial;
       }
-      form { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
+      #userForm { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
+
+      #messageForm { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
+      /* form { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;} */
       form input { border: 0; padding: 10px; width: 70%; margin-right: .5%; }
       form button {
         width: 9%;
@@ -56,36 +60,139 @@
         word-wrap: break-all;
       }
 
+      /* .thingies{
+        background-color: transparent;
+        position: relative;
+        height: 50px;
+        width: 50px;
+      } */
+
       #messageFormArea {
         display: none;
         position: fixed;
         bottom: 0;
       }
 
+      #thingieBank{
+        display: none;
+        position: fixed;
+        right: 0;
+        color: white;
+        background-color: black;
+        width: 30%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        z-index: -1;
+      }
+
+      #slideSpAZe{
+        position: fixed;
+        width: 75%;
+        height: 100%;
+        background-color: transparent;
+        left: 0;
+        z-index: -2;
+      }
+
+      #blue{
+        position: absolute;
+        top: 200px;
+        left: 200px;
+      }
+
+      #red{
+        top: 450px;
+        left: 600px;
+      }
+
+      #yellow{
+        top: 150px;
+        left: 360px;
+      }
+
+      /* #plant{
+        top: 500px;
+        left: 600px;
+      } */
+
     </style>
   </head>
   <body>
-    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid;" class="synced-draggable"><h3>silver<h3></div>
-    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter<h3></div>
-    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango<h3></div>
+    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid; " class="synced-draggable"><h3>silver</h3></div>
+    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter</h3></div>
+    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango</h3></div>
 
-    <div id="plant" style="background-color: transparent;" class="synced-draggable">
+    <!-- <div id="plant" style="background-color: transparent;" class="synced-draggable">
       <img src="http://3e-pr0cess-s33dbank.com/thingies/aloe.png" alt="opsie"/>
-    </div>
+    </div> -->
 
     <div id="userFormArea" class="row" >
     <form id="userForm" action="">
       <input id="username" autocomplete="off" type="text" /><button>login</button>
     </form>
     </div>
-    <div class="well">
-      <h2> Online Creatures</h2>
-      <ul class = "list-group" id="users"></ul>
 
+    <div id="slideSpAZe" class="well">
+      <h2> online creatures</h2>
+      <ul class = "list-group" id="users"></ul>
     </div>
 
-    <div id="messageFormArea">
+    <div id="thingieBank" >
+      <div style="position: -webkit-sticky; position: sticky; top: 0;"><h2> thingiessss!! </h2></div>
 
+      <div id="claybowl" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+        <img src="http://3e-pr0cess-s33dbank.com/thingies/claybowl.png" alt="opsie" style="height: 150px; width: 150px;"/>
+      </div>
+        <br><br><br>
+      <div id="beblm" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+        <img src="http://3e-pr0cess-s33dbank.com/thingies/beblm.png" alt="opsie" style="height: 150px; width: 150px;"/>
+      </div>
+        <br><br><br>
+      <div id="sponges" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+        <img src="http://3e-pr0cess-s33dbank.com/thingies/sponges.png" alt="opsie" style="height: 150px; width: 150px;"/>
+      </div>
+        <br><br><br>
+        <div id="wiggli" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+          <img src="http://3e-pr0cess-s33dbank.com/thingies/wiggli.png" alt="opsie" style="height: 150px; width: 150px;"/>
+        </div>
+          <br><br><br>
+        <div id="purple" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+          <img src="http://3e-pr0cess-s33dbank.com/thingies/thingyyyypurpllle.png" alt="opsie" style="height: 150px; width: 150px;"/>
+        </div>
+          <br><br><br>
+        <div id="grog" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+          <img src="http://3e-pr0cess-s33dbank.com/thingies/grog.png" alt="opsie" style="height: 150px; width: 150px;"/>
+        </div>
+          <br><br><br>
+          <div id="compost" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+            <img src="http://3e-pr0cess-s33dbank.com/thingies/compost.png" alt="opsie" style="height: 150px; width: 150px;"/>
+          </div>
+            <br><br><br>
+          <div id="cephskin" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+            <img src="http://3e-pr0cess-s33dbank.com/thingies/cephskin.png" alt="opsie" style="height: 150px; width: 150px;"/>
+          </div>
+            <br><br><br>
+          <div id="chairshark" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+            <img src="http://3e-pr0cess-s33dbank.com/thingies/chairshark.png" alt="opsie" style="height: 150px; width: 150px;"/>
+          </div>
+            <br><br><br>
+            <div id="posters" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+              <img src="http://3e-pr0cess-s33dbank.com/thingies/posters.png" alt="opsie" style="height: 150px; width: 150px;"/>
+            </div>
+              <br><br><br>
+            <div id="polkaslink" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+              <img src="http://3e-pr0cess-s33dbank.com/thingies/polkaslink.png" alt="opsie" style="height: 150px; width: 150px;"/>
+            </div>
+              <br><br><br>
+            <div id="pinkpatch" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);">
+              <img src="http://3e-pr0cess-s33dbank.com/thingies/pinkpatch.png" alt="opsie" style="height: 150px; width: 150px;"/>
+            </div>
+
+
+      </div>
+
+    <div id="messageFormArea" >
     <form id="messageForm" style="position: fixed;" action="">
       <input id="m" autocomplete="off"/>
       <button id="sayit" type="submit">Send</button>
@@ -96,22 +203,25 @@
     </div>
 
     <script>
+    var socket = io();
     var count =0;
     var scroll = -20;
     var offset = 48;
+    var logMax = 11;
     var redEntries = [];
     var yellowEntries = [];
     var blueEntries = [];
 
     $(document).ready(function () {
-      var socket = io();
       var $thisColor = "#00ccff";
+
       $('#userForm').submit(function(data){
         var usr = $('#username').val();
         if (usr===""){
         } else {
           $('#userFormArea').hide();
           $('#messageFormArea').show();
+          $('#thingieBank').show();
           socket.emit('new user', usr);
         }
         $('#username').val('');
@@ -136,11 +246,20 @@
           top: data.y + "px"
         });
       });
-
+      $(".synced-draggable").draggable({
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; text-indent: 50px; word-wrap: break-all;" class="synced-draggable" ><strong>'+entry.user+':</strong>'+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; text-indent: 50px; word-wrap: break-all; z-index: 1;" onclick="pinDiv(this.id)"><strong>'+entry.user+':</strong>'+entry.msg+'</div>');
 
           $($item).draggable({
             drag: function (event, ui) {
@@ -161,6 +280,10 @@
               var $where = $(redEntries[i]).position();
               $oldentry.css({top: $where.top + scroll});
             }
+            if(logMax<redEntries.length){
+              $(redEntries[0]).remove();
+              redEntries.splice(0, 1);
+            }
           }else if(entry.color == "#ffcc00"){
             yellowEntries.push('#entry'+count);
             $('#yellow').append($item);
@@ -168,6 +291,10 @@
               var $oldentry = $(yellowEntries[i]);
               var $where = $(yellowEntries[i]).position();
               $oldentry.css({top: $where.top + scroll});
+            }
+            if(logMax<yellowEntries.length){
+              $(yellowEntries[0]).remove();
+              yellowEntries.splice(0, 1);
             }
           }else if (entry.color == "#00ccff"){
             blueEntries.push('#entry'+count);
@@ -177,8 +304,13 @@
               var $where = $(blueEntries[i]).position();
               $oldentry.css({top: $where.top + scroll});
             }
+            if(logMax<blueEntries.length){
+              $(blueEntries[0]).remove();
+              blueEntries.splice(0, 1);
+            }
           }
           count++;
+
         });
 
       socket.on('get users', function(data){
@@ -189,22 +321,42 @@
         $('#users').html(html);
       });
 
-      $(".synced-draggable").draggable({
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
+      // socket.on('image uploaded', function(data){
+      //   console.log(data);
+      // });
+
+
     });
 
-      // function shiftThread(thread){
-      //   var entries = document.getElementsByClassName(thread);
-      //   var first = entries[0].position();
-      // }
+      function pinDiv(id){
+        var divID = "#"+id;
+        if(redEntries.includes(divID)){
+          redEntries.splice(redEntries.indexOf(divID), 1);
+        } else if(yellowEntries.includes(divID)){
+          yellowEntries.splice(yellowEntries.indexOf(divID), 1);
+        } else if(blueEntries.includes(divID)){
+          blueEntries.splice(blueEntries.indexOf(divID), 1);
+        }
+      }
+
+      function slideThingie(id){
+        var div = '#'+id;
+        console.log(div);
+        $(div).removeAttr("onclick");
+        $(div).css("left", "0%");
+        $(div).detach().appendTo('#slideSpAZe');
+        $(div).addClass("synced-draggable");
+        $(div).draggable({
+          drag: function (event, ui) {
+            var coord = $(this).position();
+            socket.emit('receive_position', {
+              id: $(this).attr('id'),
+              x: coord.left,
+              y: coord.top
+            });
+          }
+        });
+      }
 
     </script>
   </body>

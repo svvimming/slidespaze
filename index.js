@@ -2,12 +2,35 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
 
 var positions = {};
 var users = [];
+var divLog = [];
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/');
+});
+
+app.get('/divData', function(req, res){
+  res.send(divLog);
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/divs', function(req, res) {
+  var data = req.body;
+  var divs = [];
+  for(i=0; i<divLog.length; i++){
+    divs.push(divLog[i].id);
+    if(divLog[i].id === data.id){
+      divLog[i] = data;
+    }
+  }
+  if(divs.includes(data.id) != true){
+    divLog.push(data);
+  }
+  res.send(data.id);
 });
 
 io.on('connection', function(socket) {

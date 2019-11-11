@@ -3,14 +3,21 @@
   <head>
     <title>Socket.IO chat</title>
     <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <!-- <script src="jquery.ui.touch-punch.min.js"></script>  script for mobile touchevents -->
     <script src="/socket.io/socket.io.js"></script>
+
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
-        font: 13px Helvetica, Arial;
+        font-family: 'Roboto', 'Arial';
+      }
+      div {
+        font-family:
       }
       #userForm { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
       #messageForm { background: #000; padding: 3px; bottom: 0; width: 100%; z-index: -1;}
@@ -20,6 +27,7 @@
         background: #00ccff;
         border: none;
         padding: 10px;
+        font-family: 'Roboto', 'Arial';
       }
 
       h3 {
@@ -74,7 +82,7 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
-        z-index: -1;
+        z-index: 0;
       }
 
       #slideSpAZe{
@@ -83,31 +91,48 @@
         height: 100%;
         background-color: transparent;
         left: 0;
-        z-index: -2;
+        z-index: 0;
+        overflow: hidden;
       }
 
-      #blue{
+      #p5canvas {
+        position: fixed;
+        width: 70%;
+        height: 95%;
+        left: 0;
+        top: 0;
+        z-index: -10;
+      }
+
+      #blueLog{
         position: absolute;
         top: 200px;
         left: 200px;
+        z-index: 1;
       }
 
-      #red{
+      #redLog{
         top: 450px;
         left: 600px;
+        z-index: 1;
       }
 
-      #yellow{
+      #yellowLog{
         top: 150px;
         left: 360px;
+        z-index: 1;
       }
 
     </style>
   </head>
   <body>
-    <div id="blue" style="background-color: #00ccff; border: 1px #000 solid; " class="synced-draggable"><h3>silver</h3></div>
-    <div id="red" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter</h3></div>
-    <div id="yellow" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango</h3></div>
+
+
+
+
+    <div id="blueLog" style="background-color: #00ccff; border: 1px #000 solid; " class="synced-draggable"><h3>silver</h3></div>
+    <div id="redLog" style="background-color: red; border: 1px #000 solid;" class="synced-draggable"><h3>trotter</h3></div>
+    <div id="yellowLog" style="background-color: #ffcc00; border: 1px #000 solid;" class="synced-draggable"><h3>mango</h3></div>
 
     <div id="userFormArea" class="row" >
     <form id="userForm" action="">
@@ -118,6 +143,63 @@
     <div id="slideSpAZe" class="well">
       <h2> online creatures</h2>
       <ul class = "list-group" id="users"></ul>
+
+    </div>
+
+    <div id="p5Canvas">
+      <script>
+      let growth;
+      let splash;
+      let glooper;
+      let globz = [];
+      let thingies = [];
+
+      class Glob {
+       constructor(canvas, rad, xdet, ydet, xpos, ypos, xrate, yrate, offset) {
+         this.canvas = canvas;
+         this.rad = rad;
+         this.xdet = xdet;
+         this.ydet = ydet;
+         this.xpos = xpos;
+         this.ypos = ypos;
+         this.xrate = xrate;
+         this.yrate = yrate;
+         this.offset = offset;
+       }
+        gloop(){
+          sphere(this.rad, this.xdet, this.ydet);
+        }
+         move() {
+           var xdummy = this.xpos - 600;//((millis()*this.xrate) % this.canvas) - this.xpos - 600;
+           var ydummy = ((-1)*(millis()*this.yrate) % this.canvas) - this.ypos + 250;
+           translate(xdummy, ydummy);
+         }
+         rot_ate(){
+           rotateX((millis()/1000)*(PI / (30.0*(1+this.xrate))) + radians(180));
+           rotateY((millis()/1000)*(PI / (3.0*(1+this.yrate))));
+         }
+      }
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight, WEBGL);
+        for(let i = 0; i < 5; i++) {
+          globz[i] = new Glob(windowWidth, random(50, 100), 24, 24, random(0, 1000), random(0, 20), random(0.1, 0.3), random(0.1, 0.2));
+          globz[i+5] = new Glob(windowWidth, random(10, 25), 24, 24, random(0, 1000), random(0, 20), random(0.1, 0.3), random(0.1, 0.2));
+        }
+      }
+
+      function draw() {
+        background(255);
+
+        for(let k = 0; k < 10; k++) {
+          push();
+          globz[k].move();
+          globz[k].rot_ate();
+          globz[k].gloop();
+          pop();
+        }
+      }
+      </script>
     </div>
 
     <div id="thingieBank" >
@@ -260,7 +342,7 @@
 
           if(entry.color == "red"){
             redEntries.push('#entry'+count);
-            $('#red').append($item);
+            $('#redLog').append($item);
             for(i=0;i<redEntries.length;i++){
               var $oldentry = $(redEntries[i]);
               var $where = $(redEntries[i]).position();
@@ -272,7 +354,7 @@
             }
           }else if(entry.color == "#ffcc00"){
             yellowEntries.push('#entry'+count);
-            $('#yellow').append($item);
+            $('#yellowLog').append($item);
             for(i=0;i<yellowEntries.length;i++){
               var $oldentry = $(yellowEntries[i]);
               var $where = $(yellowEntries[i]).position();
@@ -284,7 +366,7 @@
             }
           }else if (entry.color == "#00ccff"){
             blueEntries.push('#entry'+count);
-            $('#blue').append($item);
+            $('#blueLog').append($item);
             for(i=0;i<blueEntries.length;i++){
               var $oldentry = $(blueEntries[i]);
               var $where = $(blueEntries[i]).position();

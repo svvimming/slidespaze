@@ -135,8 +135,6 @@
         -webkit-transform: rotate(20deg); /* Safari prior 9.0 */
         transform: rotate(20deg); /* Standard syntax */
         padding: 200px;
-        width: 600px;
-        left: 100px;
         z-index: 1;
       }
 
@@ -149,31 +147,37 @@
         z-index: -10;
       }
 
-      #blueTag{
+      #blueLog{
         /* background-color: #00ccff; */
         background: linear-gradient(70deg, rgba(46,252,255,1) 0%, rgba(13,171,233,1) 100%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
         position: absolute;
+        top: 200px;
+        left: 200px;
         z-index: 1;
       }
 
-      #redTag{
+      #redLog{
         background: linear-gradient(70deg, rgba(255,202,212,1) 0%, rgba(255,0,46,1) 70%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
         position: absolute;
+        top: 450px;
+        left: 600px;
         z-index: 1;
       }
 
-      #yellowTag{
+      #yellowLog{
         background: linear-gradient(70deg, rgba(249,255,46,1) 0%, rgba(233,199,13,1) 100%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
         position: absolute;
+        top: 150px;
+        left: 360px;
         z-index: 1;
       }
 
@@ -204,16 +208,10 @@
 
 
 
-    <div id="blueLog" style="position: absolute; width: 300px; left: 200px; top: 200px;" class="synced_draggable">
-      <div id="blueTag"><h3>silver</h3></div>
-    </div>
-    <div id="redLog" style="position: absolute; width: 300px; left: 500px; top: 300px;" class="synced_draggable">
-      <div id="redTag"><h3>trotter</h3></div>
-    </div>
-    <div id="yellowLog" style="position: absolute; width: 300px; height: 20px; left: 360px; top: 150px;" class="synced_draggable">
-      <div id="yellowTag"><h3>mango</h3></div>
-    </div>
 
+    <div id="blueLog" class="synced-draggable"><h3>silver</h3></div>
+    <div id="redLog"  class="synced-draggable"><h3>trotter</h3></div>
+    <div id="yellowLog" class="synced-draggable"><h3>mango</h3></div>
 
     <div id="userFormArea" class="row" >
       <form id="userForm" action="">
@@ -223,7 +221,7 @@
 
     <div id="slideSpAZe" class="well">
       <div id="userlist">
-        <h2 id="creaturez"> online creatures</h2>
+        <h2> online creatures</h2>
         <ul class = "list-group" id="users" style="font-style: italic;"></ul>
       </div>
 
@@ -369,11 +367,7 @@
     $(document).ready(function () {
       var $thisColor = "#00ccff";
 
-      $('#userlist').draggable( { handle: "#creaturez"});
-      $('#blueLog').draggable({ handle: "#blueTag" });
-      $('#redLog').draggable({ handle: "#redTag" });
-      $('#yellowLog').draggable({ handle: "#yellowTag" });
-
+      $('#userlist').draggable();
 
       $.get('/divData', function(data){
         for(i=0;i<data.length;i++){
@@ -444,7 +438,7 @@
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; left: 75px; top: 32px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; width:fit-content; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
 
           console.log($($item).css("width"));
           $($item).draggable({
@@ -461,7 +455,7 @@
           if(entry.color == "red"){
             redEntries.push('#entry'+count);
             $('#redLog').append($item);
-            // $($item).css("left", "75px");
+            $($item).css("left", "75px");
             for(i=0;i<redEntries.length;i++){
               var $oldentry = $(redEntries[i]);
               var $where = $(redEntries[i]).position();
@@ -474,7 +468,7 @@
           }else if(entry.color == "#ffcc00"){
             yellowEntries.push('#entry'+count);
             $('#yellowLog').append($item);
-            // $($item).css("left", "75px");
+            $($item).css("left", "75px");
             for(i=0;i<yellowEntries.length;i++){
               var $oldentry = $(yellowEntries[i]);
               var $where = $(yellowEntries[i]).position();
@@ -487,7 +481,7 @@
           }else if (entry.color == "#00ccff"){
             blueEntries.push('#entry'+count);
             $('#blueLog').append($item);
-            // $($item).css("left", "75px");
+            $($item).css("left", "75px");
             for(i=0;i<blueEntries.length;i++){
               var $oldentry = $(blueEntries[i]);
               var $where = $(blueEntries[i]).position();

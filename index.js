@@ -18,6 +18,8 @@ app.get('/divData', function(req, res){
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static('client'));
+
 app.post('/divs', function(req, res) {
   var data = req.body;
   var divs = [];

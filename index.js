@@ -64,9 +64,14 @@ io.on('connection', function(socket) {
     updateUsernames();
   });
 
+  socket.on('new div', function(data){
+    io.emit('make div', {id: data.id, html: data.html, parent: data.parent, color: data.color});
+  });
+
   function updateUsernames(){
     io.emit('get users', users);
   }
+
 });
 
 http.listen(3000, function() {

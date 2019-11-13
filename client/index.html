@@ -28,23 +28,32 @@
         background: linear-gradient(61deg, rgba(213,204,214,1) 0%, rgba(255,255,255,1) 63%, rgba(206,212,217,1) 100%);
 
       }
-      #userForm {
-
-        padding: 3px;
-        bottom: 0;
-        width: 100%;
-        z-index: -1;
+      #userFormArea {
+        position:absolute;
+        width: 80%;
+        top: 50px;
+        left: 5%;
+        z-index: 10;
+      }
+      #userForm { position: absolute; padding: 3px; bottom: 0; width: 100%; z-index: 10; border: 1px #fff solid; border-radius: 10px;}
+      #username {
+        border: 1;
+        border-radius: 10px;
+        padding: 10px;
+        width: 90%;
+        margin-right: .5%;
+        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
       }
       #messageForm { padding: 3px; bottom: 0; width: 100%; z-index: -1;}
-      form input {
+      #m {
         border: 1;
         border-radius: 10px;
         padding: 10px;
         width: 70%;
         margin-right: .5%;
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-
       }
+
       form button {
         width: 9%;
         background: #00ccff;
@@ -112,7 +121,7 @@
         border: 1px #fff solid;
         border-radius: 10px;
         width: 30%;
-        height: 90%;
+        height: 85%;
         overflow-x: hidden;
         overflow-y: scroll;
         z-index: 1;
@@ -131,13 +140,23 @@
       }
 
       #userlist{
-        -ms-transform: rotate(20deg); /* IE 9 */
-        -webkit-transform: rotate(20deg); /* Safari prior 9.0 */
-        transform: rotate(20deg); /* Standard syntax */
-        padding: 200px;
-        width: 600px;
-        left: 100px;
+        -ms-transform: rotate(20deg);
+        -webkit-transform: rotate(20deg);
+        transform: rotate(20deg);
+        position: relative;
+        /* background-color: black; */
+        padding: 10px;
+        width: 300px;
+        height: 300px;
+        left: 250px;
+        top: 200px;
         z-index: 1;
+      }
+
+      #creaturez {
+        position: relative;
+        top: 0px;
+        left: 0px;
       }
 
       #p5canvas {
@@ -155,7 +174,8 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        position: absolute;
+        /* position: absolute; */
+        top: 90px;
         z-index: 1;
       }
 
@@ -164,7 +184,8 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        position: absolute;
+        /* position: absolute; */
+        top: 90px;
         z-index: 1;
       }
 
@@ -173,7 +194,8 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        position: absolute;
+        /* position: absolute; */
+        top: 90px;
         z-index: 1;
       }
 
@@ -204,24 +226,31 @@
 
 
 
-    <div id="blueLog" style="position: absolute; width: 300px; left: 200px; top: 200px;" class="synced_draggable">
-      <div id="blueTag"><h3>silver</h3></div>
+    <div id="blueLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 200px; top: 200px;" class="synced_draggable">
+      <div id="blueTag" style="position: sticky; width: fit-content;"><h3>silver</h3></div>
     </div>
-    <div id="redLog" style="position: absolute; width: 300px; left: 500px; top: 300px;" class="synced_draggable">
-      <div id="redTag"><h3>trotter</h3></div>
+    <div id="redLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 500px; top: 300px;" class="synced_draggable">
+      <div id="redTag" style="position: sticky; width: fit-content;"><h3>trotter</h3></div>
     </div>
-    <div id="yellowLog" style="position: absolute; width: 300px; height: 20px; left: 360px; top: 150px;" class="synced_draggable">
-      <div id="yellowTag"><h3>mango</h3></div>
+    <div id="yellowLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 360px; top: 150px;" class="synced_draggable">
+      <div id="yellowTag" style="position: sticky; width: fit-content;"><h3>mango</h3></div>
     </div>
 
 
-    <div id="userFormArea" class="row" >
+    <!-- <div id="userFormArea" class="row" >
       <form id="userForm" action="">
         <input id="username" autocomplete="off" type="text" /><button>login</button>
       </form>
-    </div>
+    </div> -->
 
     <div id="slideSpAZe" class="well">
+
+      <div id="userFormArea">
+        <form id="userForm" action="">
+          <input id="username" autocomplete="off" type="text" /><button>login</button>
+        </form>
+      </div>
+
       <div id="userlist">
         <h2 id="creaturez"> online creatures</h2>
         <ul class = "list-group" id="users" style="font-style: italic;"></ul>
@@ -328,6 +357,10 @@
         }
       }
 
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+
       function draw() {
         //drag to move the world.
         orbitControl();
@@ -361,19 +394,13 @@
 
     var scroll = -20;
     var offset = 48;
-    var logMax = 11;
+    var logMax = 33;
     var redEntries = [];
     var yellowEntries = [];
     var blueEntries = [];
 
     $(document).ready(function () {
       var $thisColor = "#00ccff";
-
-      $('#userlist').draggable( { handle: "#creaturez"});
-      $('#blueLog').draggable({ handle: "#blueTag" });
-      $('#redLog').draggable({ handle: "#redTag" });
-      $('#yellowLog').draggable({ handle: "#yellowTag" });
-
 
       $.get('/divData', function(data){
         for(i=0;i<data.length;i++){
@@ -384,7 +411,8 @@
             position: "absolute",
             left: $div.x+"px",
             top: $div.y+"px",
-            color: $div.color
+            color: $div.color,
+            zIndex: "1"
           });
           $($item).draggable({
             drag: function (event, ui) {
@@ -431,6 +459,7 @@
           top: data.y + "px"
         });
       });
+
       $(".synced-draggable").draggable({
         drag: function (event, ui) {
           var coord = $(this).position();
@@ -441,10 +470,81 @@
           });
         }
       });
+
+      $('#userlist').draggable( {
+        handle: "#creaturez",
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
+
+      $('#blueLog').draggable({
+        handle: "#blueTag",
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
+      $('#redLog').draggable({
+        handle: "#redTag",
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
+      $('#yellowLog').draggable({
+        handle: "#yellowTag",
+        drag: function (event, ui) {
+          var coord = $(this).position();
+          socket.emit('receive_position', {
+            id: $(this).attr('id'),
+            x: coord.left,
+            y: coord.top
+          });
+        }
+      });
+
+      socket.on('make div', function(data){
+        var divID = "#"+data.id;
+        if ($(divID).length){
+          console.log("already made");
+        } else {
+          var $item = $( '<div id="'+data.id+'" onmouseup="sendDivInfo(this.id);">'+data.html+'</div>' );
+          $($item).appendTo(data.parent);
+          $($item).css({
+            position: "absolute",
+            color: data.color,
+            zIndex: "1"
+          });
+          $($item).draggable({
+            drag: function (event, ui) {
+              var coord = $(this).position();
+              socket.emit('receive_position', {
+                id: $(this).attr('id'),
+                x: coord.left,
+                y: coord.top
+              });
+            }
+          });
+        }
+      });
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; left: 75px; top: 32px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
 
           console.log($($item).css("width"));
           $($item).draggable({
@@ -461,12 +561,8 @@
           if(entry.color == "red"){
             redEntries.push('#entry'+count);
             $('#redLog').append($item);
-            // $($item).css("left", "75px");
-            for(i=0;i<redEntries.length;i++){
-              var $oldentry = $(redEntries[i]);
-              var $where = $(redEntries[i]).position();
-              $oldentry.css({top: $where.top + scroll});
-            }
+            var elem = document.getElementById('redLog');
+            elem.scrollTop = elem.scrollHeight;
             if(logMax<redEntries.length){
               $(redEntries[0]).remove();
               redEntries.splice(0, 1);
@@ -474,12 +570,8 @@
           }else if(entry.color == "#ffcc00"){
             yellowEntries.push('#entry'+count);
             $('#yellowLog').append($item);
-            // $($item).css("left", "75px");
-            for(i=0;i<yellowEntries.length;i++){
-              var $oldentry = $(yellowEntries[i]);
-              var $where = $(yellowEntries[i]).position();
-              $oldentry.css({top: $where.top + scroll});
-            }
+            var elem = document.getElementById('yellowLog');
+            elem.scrollTop = elem.scrollHeight;
             if(logMax<yellowEntries.length){
               $(yellowEntries[0]).remove();
               yellowEntries.splice(0, 1);
@@ -487,19 +579,14 @@
           }else if (entry.color == "#00ccff"){
             blueEntries.push('#entry'+count);
             $('#blueLog').append($item);
-            // $($item).css("left", "75px");
-            for(i=0;i<blueEntries.length;i++){
-              var $oldentry = $(blueEntries[i]);
-              var $where = $(blueEntries[i]).position();
-              $oldentry.css({top: $where.top + scroll});
-            }
+            var elem = document.getElementById('blueLog');
+            elem.scrollTop = elem.scrollHeight;
             if(logMax<blueEntries.length){
               $(blueEntries[0]).remove();
               blueEntries.splice(0, 1);
             }
           }
           count++;
-
         });
 
       socket.on('get users', function(data){
@@ -513,6 +600,13 @@
 
       function pinDiv(id){
         var div = "#"+id;
+        $(div).appendTo('#slideSpAZe');
+        $(div).css({
+          position: "absolute",
+          left: event.pageX,
+          top: event.pageY,
+          zIndex: "1"
+        });
         if(redEntries.includes(div)){
           redEntries.splice(redEntries.indexOf(div), 1);
         } else if(yellowEntries.includes(div)){
@@ -543,7 +637,6 @@
       }
 
       function sendDivInfo(id) {
-
         var div = '#'+id;
         var coord = $(div).position();
         var htmlString = $(div).html();
@@ -565,6 +658,11 @@
         $(div).removeAttr("onmousedown");
         $(div).attr("id", logID);
         $("#"+logID).attr("onmouseup", "sendDivInfo(this.id);");
+
+        var htmlString = $(div).html();
+        var parentNode = '#'+$(div).parent().attr("id");
+        var thisColor = $(div).css("color");
+        socket.emit('new div', {"id": logID, "html": htmlString, "parent": parentNode, "color": thisColor});
       };
 
     </script>

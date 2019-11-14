@@ -174,7 +174,6 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        /* position: absolute; */
         top: 90px;
         z-index: 1;
       }
@@ -184,7 +183,6 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        /* position: absolute; */
         top: 90px;
         z-index: 1;
       }
@@ -194,7 +192,6 @@
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        /* position: absolute; */
         top: 90px;
         z-index: 1;
       }
@@ -224,8 +221,6 @@
   </head>
   <body>
 
-
-
     <div id="blueLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 200px; top: 200px;" class="synced_draggable">
       <div id="blueTag" style="position: sticky; width: fit-content;"><h3>silver</h3></div>
     </div>
@@ -235,13 +230,6 @@
     <div id="yellowLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 360px; top: 150px;" class="synced_draggable">
       <div id="yellowTag" style="position: sticky; width: fit-content;"><h3>mango</h3></div>
     </div>
-
-
-    <!-- <div id="userFormArea" class="row" >
-      <form id="userForm" action="">
-        <input id="username" autocomplete="off" type="text" /><button>login</button>
-      </form>
-    </div> -->
 
     <div id="slideSpAZe" class="well">
 
@@ -519,8 +507,9 @@
 
       socket.on('make div', function(data){
         var divID = "#"+data.id;
+        var testparent = $(divID).parent();
         if ($(divID).length){
-          console.log("already made");
+          console.log(testparent);
         } else {
           var $item = $( '<div id="'+data.id+'" onmouseup="sendDivInfo(this.id);">'+data.html+'</div>' );
           $($item).appendTo(data.parent);
@@ -651,17 +640,19 @@
       }
 
       function makeID(id) {
+        var div = '#'+id;
+        var htmlString = $(div).html();
+        var parentNode = '#'+$(div).parent().attr("id");
+        var thisColor = $(div).css("color");
+
         var number = Math.random()
         number.toString(36);
         var logID = number.toString(36).substr(2, 9);
-        var div = '#'+id;
+
         $(div).removeAttr("onmousedown");
         $(div).attr("id", logID);
         $("#"+logID).attr("onmouseup", "sendDivInfo(this.id);");
 
-        var htmlString = $(div).html();
-        var parentNode = '#'+$(div).parent().attr("id");
-        var thisColor = $(div).css("color");
         socket.emit('new div', {"id": logID, "html": htmlString, "parent": parentNode, "color": thisColor});
       };
 

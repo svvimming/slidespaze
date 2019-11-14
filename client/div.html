@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+      #blueLog {
+        position: absolute;
+        width: 300px;
+        left: 200px;
+        top: 200px;
+      }
+
+      #blueTag {
+        background: linear-gradient(70deg, rgba(46,252,255,1) 0%, rgba(13,171,233,1) 100%);
+        padding: 10px;
+        border: 1px #fff solid;
+        border-radius: 10px;
+        position: absolute;
+
+      }
+    </style>
+
+  </head>
+
+  <body >
+
+    <div id="blueLog">
+      <div id="blueTag" onclick="newEntry();">silver</div>
+    </div>
+
+<script>
+
+  var count = 0;
+
+  $('#blueLog').draggable({ handle: "#blueTag" });
+
+  function newEntry(){
+    var $item = $('<div id="entry'+count+'" style="background-color: transparent; position: absolute; left: 60px;" ><strong>svvi:</strong> olaaa ola o la o l a aaaa</div>');
+    $($item).draggable();
+    $('#blueLog').append($item);
+    count++;
+  }
+</script>
+  </body>
+
+</html>

@@ -28,32 +28,23 @@
         background: linear-gradient(61deg, rgba(213,204,214,1) 0%, rgba(255,255,255,1) 63%, rgba(206,212,217,1) 100%);
 
       }
-      #userFormArea {
-        position:absolute;
-        width: 80%;
-        top: 50px;
-        left: 5%;
-        z-index: 10;
-      }
-      #userForm { position: absolute; padding: 3px; bottom: 0; width: 100%; z-index: 10; border: 1px #fff solid; border-radius: 10px;}
-      #username {
-        border: 1;
-        border-radius: 10px;
-        padding: 10px;
-        width: 90%;
-        margin-right: .5%;
-        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
+      #userForm {
+
+        padding: 3px;
+        bottom: 0;
+        width: 100%;
+        z-index: -1;
       }
       #messageForm { padding: 3px; bottom: 0; width: 100%; z-index: -1;}
-      #m {
+      form input {
         border: 1;
         border-radius: 10px;
         padding: 10px;
         width: 70%;
         margin-right: .5%;
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-      }
 
+      }
       form button {
         width: 9%;
         background: #00ccff;
@@ -121,7 +112,7 @@
         border: 1px #fff solid;
         border-radius: 10px;
         width: 30%;
-        height: 85%;
+        height: 90%;
         overflow-x: hidden;
         overflow-y: scroll;
         z-index: 1;
@@ -140,23 +131,11 @@
       }
 
       #userlist{
-        -ms-transform: rotate(20deg);
-        -webkit-transform: rotate(20deg);
-        transform: rotate(20deg);
-        position: relative;
-        /* background-color: black; */
-        padding: 10px;
-        width: 300px;
-        height: 300px;
-        left: 250px;
-        top: 200px;
+        -ms-transform: rotate(20deg); /* IE 9 */
+        -webkit-transform: rotate(20deg); /* Safari prior 9.0 */
+        transform: rotate(20deg); /* Standard syntax */
+        padding: 200px;
         z-index: 1;
-      }
-
-      #creaturez {
-        position: relative;
-        top: 0px;
-        left: 0px;
       }
 
       #p5canvas {
@@ -168,31 +147,37 @@
         z-index: -10;
       }
 
-      #blueTag{
+      #blueLog{
         /* background-color: #00ccff; */
         background: linear-gradient(70deg, rgba(46,252,255,1) 0%, rgba(13,171,233,1) 100%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        top: 90px;
+        position: absolute;
+        top: 200px;
+        left: 200px;
         z-index: 1;
       }
 
-      #redTag{
+      #redLog{
         background: linear-gradient(70deg, rgba(255,202,212,1) 0%, rgba(255,0,46,1) 70%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        top: 90px;
+        position: absolute;
+        top: 450px;
+        left: 600px;
         z-index: 1;
       }
 
-      #yellowTag{
+      #yellowLog{
         background: linear-gradient(70deg, rgba(249,255,46,1) 0%, rgba(233,199,13,1) 100%);
         padding: 10px;
         border: 1px #fff solid;
         border-radius: 10px;
-        top: 90px;
+        position: absolute;
+        top: 150px;
+        left: 360px;
         z-index: 1;
       }
 
@@ -221,26 +206,22 @@
   </head>
   <body>
 
-    <div id="blueLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 200px; top: 200px;" class="synced_draggable">
-      <div id="blueTag" style="position: sticky; width: fit-content;"><h3>silver</h3></div>
-    </div>
-    <div id="redLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 500px; top: 300px;" class="synced_draggable">
-      <div id="redTag" style="position: sticky; width: fit-content;"><h3>trotter</h3></div>
-    </div>
-    <div id="yellowLog" style="position: absolute; width: 300px; height: 225px; background-color: transparent; overflow-y: scroll; left: 360px; top: 150px;" class="synced_draggable">
-      <div id="yellowTag" style="position: sticky; width: fit-content;"><h3>mango</h3></div>
+
+
+
+    <div id="blueLog" class="synced-draggable"><h3>silver</h3></div>
+    <div id="redLog"  class="synced-draggable"><h3>trotter</h3></div>
+    <div id="yellowLog" class="synced-draggable"><h3>mango</h3></div>
+
+    <div id="userFormArea" class="row" >
+      <form id="userForm" action="">
+        <input id="username" autocomplete="off" type="text" /><button>login</button>
+      </form>
     </div>
 
     <div id="slideSpAZe" class="well">
-
-      <div id="userFormArea">
-        <form id="userForm" action="">
-          <input id="username" autocomplete="off" type="text" /><button>login</button>
-        </form>
-      </div>
-
       <div id="userlist">
-        <h2 id="creaturez"> online creatures</h2>
+        <h2> online creatures</h2>
         <ul class = "list-group" id="users" style="font-style: italic;"></ul>
       </div>
 
@@ -345,10 +326,6 @@
         }
       }
 
-      function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-      }
-
       function draw() {
         //drag to move the world.
         orbitControl();
@@ -382,13 +359,15 @@
 
     var scroll = -20;
     var offset = 48;
-    var logMax = 33;
+    var logMax = 11;
     var redEntries = [];
     var yellowEntries = [];
     var blueEntries = [];
 
     $(document).ready(function () {
       var $thisColor = "#00ccff";
+
+      $('#userlist').draggable();
 
       $.get('/divData', function(data){
         for(i=0;i<data.length;i++){
@@ -399,8 +378,7 @@
             position: "absolute",
             left: $div.x+"px",
             top: $div.y+"px",
-            color: $div.color,
-            zIndex: "1"
+            color: $div.color
           });
           $($item).draggable({
             drag: function (event, ui) {
@@ -447,7 +425,6 @@
           top: data.y + "px"
         });
       });
-
       $(".synced-draggable").draggable({
         drag: function (event, ui) {
           var coord = $(this).position();
@@ -458,82 +435,10 @@
           });
         }
       });
-
-      $('#userlist').draggable( {
-        handle: "#creaturez",
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
-
-      $('#blueLog').draggable({
-        handle: "#blueTag",
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
-      $('#redLog').draggable({
-        handle: "#redTag",
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
-      $('#yellowLog').draggable({
-        handle: "#yellowTag",
-        drag: function (event, ui) {
-          var coord = $(this).position();
-          socket.emit('receive_position', {
-            id: $(this).attr('id'),
-            x: coord.left,
-            y: coord.top
-          });
-        }
-      });
-
-      socket.on('make div', function(data){
-        var divID = "#"+data.id;
-        var testparent = $(divID).parent();
-        if ($(divID).length){
-          console.log(testparent);
-        } else {
-          var $item = $( '<div id="'+data.id+'" onmouseup="sendDivInfo(this.id);">'+data.html+'</div>' );
-          $($item).appendTo(data.parent);
-          $($item).css({
-            position: "absolute",
-            color: data.color,
-            zIndex: "1"
-          });
-          $($item).draggable({
-            drag: function (event, ui) {
-              var coord = $(this).position();
-              socket.emit('receive_position', {
-                id: $(this).attr('id'),
-                x: coord.left,
-                y: coord.top
-              });
-            }
-          });
-        }
-      });
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: absolute; width:fit-content; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
 
           console.log($($item).css("width"));
           $($item).draggable({
@@ -550,8 +455,12 @@
           if(entry.color == "red"){
             redEntries.push('#entry'+count);
             $('#redLog').append($item);
-            var elem = document.getElementById('redLog');
-            elem.scrollTop = elem.scrollHeight;
+            $($item).css("left", "75px");
+            for(i=0;i<redEntries.length;i++){
+              var $oldentry = $(redEntries[i]);
+              var $where = $(redEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
             if(logMax<redEntries.length){
               $(redEntries[0]).remove();
               redEntries.splice(0, 1);
@@ -559,8 +468,12 @@
           }else if(entry.color == "#ffcc00"){
             yellowEntries.push('#entry'+count);
             $('#yellowLog').append($item);
-            var elem = document.getElementById('yellowLog');
-            elem.scrollTop = elem.scrollHeight;
+            $($item).css("left", "75px");
+            for(i=0;i<yellowEntries.length;i++){
+              var $oldentry = $(yellowEntries[i]);
+              var $where = $(yellowEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
             if(logMax<yellowEntries.length){
               $(yellowEntries[0]).remove();
               yellowEntries.splice(0, 1);
@@ -568,14 +481,19 @@
           }else if (entry.color == "#00ccff"){
             blueEntries.push('#entry'+count);
             $('#blueLog').append($item);
-            var elem = document.getElementById('blueLog');
-            elem.scrollTop = elem.scrollHeight;
+            $($item).css("left", "75px");
+            for(i=0;i<blueEntries.length;i++){
+              var $oldentry = $(blueEntries[i]);
+              var $where = $(blueEntries[i]).position();
+              $oldentry.css({top: $where.top + scroll});
+            }
             if(logMax<blueEntries.length){
               $(blueEntries[0]).remove();
               blueEntries.splice(0, 1);
             }
           }
           count++;
+
         });
 
       socket.on('get users', function(data){
@@ -589,13 +507,6 @@
 
       function pinDiv(id){
         var div = "#"+id;
-        $(div).appendTo('#slideSpAZe');
-        $(div).css({
-          position: "absolute",
-          left: event.pageX,
-          top: event.pageY,
-          zIndex: "1"
-        });
         if(redEntries.includes(div)){
           redEntries.splice(redEntries.indexOf(div), 1);
         } else if(yellowEntries.includes(div)){
@@ -626,6 +537,7 @@
       }
 
       function sendDivInfo(id) {
+
         var div = '#'+id;
         var coord = $(div).position();
         var htmlString = $(div).html();
@@ -640,20 +552,13 @@
       }
 
       function makeID(id) {
-        var div = '#'+id;
-        var htmlString = $(div).html();
-        var parentNode = '#'+$(div).parent().attr("id");
-        var thisColor = $(div).css("color");
-
         var number = Math.random()
         number.toString(36);
         var logID = number.toString(36).substr(2, 9);
-
+        var div = '#'+id;
         $(div).removeAttr("onmousedown");
         $(div).attr("id", logID);
         $("#"+logID).attr("onmouseup", "sendDivInfo(this.id);");
-
-        socket.emit('new div', {"id": logID, "html": htmlString, "parent": parentNode, "color": thisColor});
       };
 
     </script>

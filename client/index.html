@@ -535,7 +535,9 @@
       //NEW MESSAGE
       socket.on('chat message', function(entry){
 
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
+          // var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);">'+entry.msg+'</div>');
+
 
           console.log($($item).css("width"));
           $($item).draggable({

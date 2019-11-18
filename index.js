@@ -55,7 +55,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('chat message', function(data) {
-    io.emit('chat message', {msg: data.text, user: socket.username, color: data.color});
+    io.emit('chat message', {msg: data.text, user: socket.username, color: data.color, point: data.point});
   });
 
   socket.on('new user', function(data){
@@ -65,7 +65,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('new div', function(data){
-    io.emit('make div', {id: data.id, html: data.html, parent: data.parent, color: data.color});
+    io.emit('make div', {id: data.id, html: data.html, parent: data.parent, color: data.color, point: data.point});
   });
 
   function updateUsernames(){
@@ -73,10 +73,6 @@ io.on('connection', function(socket) {
   }
 
 });
-
-// http.listen(3000, function() {
-//   console.log('listening on *:3000');
-// });
 
 http.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);

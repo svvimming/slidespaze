@@ -26,7 +26,6 @@
 
       form {
         border: 5px;
-        background: linear-gradient(61deg, rgba(213,204,214,1) 0%, rgba(255,255,255,1) 63%, rgba(206,212,217,1) 100%);
 
       }
       #userFormArea {
@@ -36,7 +35,16 @@
         left: 5%;
         z-index: 10;
       }
-      #userForm { position: absolute; padding: 3px; bottom: 0; width: 100%; z-index: 10; border: 1px #fff solid; border-radius: 10px;}
+      #userForm {
+        position: absolute;
+        padding: 3px;
+        bottom: 0;
+        width: 100%;
+        z-index: 10;
+        border: 1px #fff solid;
+        border-radius: 10px;
+        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
+      }
       #username {
         border: 1;
         border-radius: 10px;
@@ -45,12 +53,18 @@
         margin-right: .5%;
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
       }
-      #messageForm { padding: 3px; bottom: 0; width: 100%; z-index: -1;}
+      #messageFormArea {
+        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
+        width: 100%;
+      }
+      #messageForm { padding: 3px; bottom: 0; width: 80%; z-index: -1;}
       #m {
+        left: 10%;
+        position: relative;
         border: 1;
         border-radius: 10px;
         padding: 10px;
-        width: 70%;
+        width: 50%;
         margin-right: .5%;
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
       }
@@ -367,10 +381,16 @@
     </div>
 
     <div id="messageFormArea" >
-    <form id="messageForm" style="position: fixed;" action="">
+      <div>
+        <button id="tiny" type="button"  class="pointsize" style="position: relative; width: 3%; color: black;" data-point="12pt">tiny</button>
+        <button id="inbetween" type="button" class="pointsize" style="position: relative; width: 3%; color: black;" data-point="22pt">inbetween</button>
+        <button id="huGe" type="button" class="pointsize" style="position: relative; width: 3%; color: black;" data-point="32pt">huGe</button>
+      </div>
+    <form id="messageForm" style="position: relative; left: 50px;" action="">
+
       <input id="m" autocomplete="off"/>
       <button id="sayit" type="submit">Send</button>
-      <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red;">
+      <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red; ">
       <button id="yellowbtn" type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
       <button id="bluebtn" type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
     </form>
@@ -391,8 +411,10 @@
 
     $(document).ready(function () {
       var $thisColor = "#00ccff";
+      var $pointSize = "22pt";
 
       $.get('/divData', function(data){
+
         for(i=0;i<data.length;i++){
           var $div = data[i];
           var $item = $( '<div id="'+$div.id+'" onmouseup="sendDivInfo(this.id);">'+$div.html+'</div>' );
@@ -402,6 +424,7 @@
             left: $div.x+"px",
             top: $div.y+"px",
             color: $div.color,
+            fontSize: $div.point, //CSS SYNTAX FOR FONT SIZE *******************
             zIndex: "1"
           });
           $($item).draggable({
@@ -432,12 +455,17 @@
       });
 
       //MESSAGEFORM SUBMIT
+      $('.pointsize').click(function(){
+        $pointSize = $(this).data('point');
+      });
+
       $('.button').click(function(){
         $thisColor = $(this).data('color');
         $('#sayit').css("background",$thisColor);
       });
+
       $('#messageForm').submit(function(submit_data){
-        socket.emit('chat message', {text: $('#m').val(), color: $thisColor});
+        socket.emit('chat message', {text: $('#m').val(), color: $thisColor, point: $pointSize});
         $('#m').val('');
         return false;
       });
@@ -518,6 +546,7 @@
           $($item).css({
             position: "absolute",
             color: data.color,
+            fontSize: data.point,
             zIndex: "1"
           });
           $($item).draggable({
@@ -536,7 +565,7 @@
       socket.on('chat message', function(entry){
 
           // var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);"><strong>'+entry.user+':</strong> '+entry.msg+'</div>');
-          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1;" onmousedown="pinDiv(this.id); makeID(this.id);">'+entry.msg+'</div>');
+          var $item = $('<div id="entry'+count+'" style="background-color: transparent; color:'+entry.color+'; position: relative; left: 75px; z-index: 1; font-size:'+entry.point+';" onmousedown="pinDiv(this.id); makeID(this.id);">'+entry.msg+'</div>');
 
 
           console.log($($item).css("width"));
@@ -635,9 +664,10 @@
         var htmlString = $(div).html();
         var parentNode = '#'+$(div).parent().attr("id");
         var thisColor = $(div).css("color");
+        var thisPoint = $(div).css("font-size");
 
         $.post('/divs',
-          {"id": id, "x": coord.left, "y": coord.top, "html": htmlString, "parent": parentNode, "color": thisColor},
+          {"id": id, "x": coord.left, "y": coord.top, "html": htmlString, "parent": parentNode, "color": thisColor, "point": thisPoint},
             function(data, status, jqXHR){
               console.log(data);
         });
@@ -648,6 +678,7 @@
         var htmlString = $(div).html();
         var parentNode = '#'+$(div).parent().attr("id");
         var thisColor = $(div).css("color");
+        var thisPoint = $(div).css("font-size");
 
         var number = Math.random()
         number.toString(36);
@@ -657,7 +688,7 @@
         $(div).attr("id", logID);
         $("#"+logID).attr("onmouseup", "sendDivInfo(this.id);");
 
-        socket.emit('new div', {"id": logID, "html": htmlString, "parent": parentNode, "color": thisColor});
+        socket.emit('new div', {"id": logID, "html": htmlString, "parent": parentNode, "color": thisColor, "point": thisPoint});
       };
 
     </script>

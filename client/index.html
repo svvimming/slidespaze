@@ -56,15 +56,16 @@
       #messageFormArea {
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
         width: 100%;
+        padding: 5px;
       }
       #messageForm { padding: 3px; bottom: 0; width: 80%; z-index: -1;}
       #m {
-        left: 10%;
+        /* left: 10%; */
         position: relative;
         border: 1;
         border-radius: 10px;
         padding: 10px;
-        width: 50%;
+        width: 40%;
         margin-right: .5%;
         background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
       }
@@ -105,6 +106,31 @@
         text-align: center;
         padding: 10px;
         z-index: 1;
+      }
+
+      .pointsize {
+        padding: 10px;
+        width: 5%;
+        height: 29px;
+        text-align: center;
+        cursor: pointer;
+        outline: none;
+        background-color: #00ccff;
+        border: none;
+      }
+
+      .pointsize:hover {
+        background-color: #00a5cf;
+      }
+
+      .pointsize:active {
+        background-color: #00a5cf;
+        transform: translateY(2px);
+      }
+
+      .pointsize:focus {
+        background-color: #45d9ff;
+        font-weight: bold;
       }
 
       .sticky {
@@ -250,7 +276,7 @@
 
       <div id="userFormArea">
         <form id="userForm" action="">
-          <input id="username" autocomplete="off" type="text" /><button>login</button>
+          <input id="username" autocomplete="off" type="text" onclick="spanmegamix()"/><button>login</button>
         </form>
       </div>
 
@@ -381,20 +407,44 @@
     </div>
 
     <div id="messageFormArea" >
-      <div>
-        <button id="tiny" type="button"  class="pointsize" style="position: relative; width: 3%; color: black;" data-point="12pt">tiny</button>
-        <button id="inbetween" type="button" class="pointsize" style="position: relative; width: 3%; color: black;" data-point="22pt">inbetween</button>
-        <button id="huGe" type="button" class="pointsize" style="position: relative; width: 3%; color: black;" data-point="32pt">huGe</button>
-      </div>
-    <form id="messageForm" style="position: relative; left: 50px;" action="">
+
+
+      <div id="mojimix"></div>
+
+    <form id="messageForm" style="position: relative; " action="">
 
       <input id="m" autocomplete="off"/>
       <button id="sayit" type="submit">Send</button>
       <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red; ">
       <button id="yellowbtn" type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
       <button id="bluebtn" type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
+        <button id="tiny" type="button"  class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="12pt">tiny</button>
+        <button id="inbetween" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="22pt">inbetween</button>
+        <button id="huGe" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="42pt">huGe</button>
     </form>
+<!--
+    <div>
+
+    </div> -->
     </div>
+
+    <script>
+    // var mojiarray = ['🐣', '🐥', '🦆', '🦅', '🦉', ];
+    var mojiarray = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷', '🕸', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🐘', '🦏', '🐪', '🐫', '🦒', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🕊', '🐇', '🐁', '🐀', '🐿', '🦔', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🐚', '🌾', '💐', '🌷', '🌹', '🥀', '🌺', '🌸'];
+    //🌼🌻🌞🌝🌛🌜🌚🌕🌖🌗🌘🌑🌒🌓🌔🌙🌎🌍🌏💫⭐️🌟✨⚡️☄️💥🔥🌪🌈☀️🌤⛅️🌥☁️🌦🌧⛈🌩🌨❄️☃️⛄️🌬💨💧💦☔️☂️🌊🌫
+    function spanmegamix() {
+      var $ele =  $('#mojimix');
+      for (i=0; i<mojiarray.length; i++){
+         moji = mojiarray[i];
+        $ele.append('<span onclick="addemoji(this.innerText)">'+moji+'</span>');
+      }
+    }
+
+    function addemoji(moji){
+      var $entry = $('#m').val();
+      $('#m').val($entry+moji);
+    }
+    </script>
 
     <script>
     //socket script

@@ -9,7 +9,7 @@
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="js/jquery.ui.touch-punch.min.js"></script>  
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
     <style>
@@ -414,7 +414,7 @@
     <form id="messageForm" style="position: relative; " action="">
 
       <input id="m" autocomplete="off"/>
-      <button id="sayit" type="submit">Send</button>
+      <button id="sayit" type="submit" style="width: fit-content;">Send</button>
       <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red; ">
       <button id="yellowbtn" type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
       <button id="bluebtn" type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
@@ -429,9 +429,7 @@
     </div>
 
     <script>
-    // var mojiarray = ['🐣', '🐥', '🦆', '🦅', '🦉', ];
-    var mojiarray = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷', '🕸', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🐘', '🦏', '🐪', '🐫', '🦒', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🕊', '🐇', '🐁', '🐀', '🐿', '🦔', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🐚', '🌾', '💐', '🌷', '🌹', '🥀', '🌺', '🌸'];
-    //🌼🌻🌞🌝🌛🌜🌚🌕🌖🌗🌘🌑🌒🌓🌔🌙🌎🌍🌏💫⭐️🌟✨⚡️☄️💥🔥🌪🌈☀️🌤⛅️🌥☁️🌦🌧⛈🌩🌨❄️☃️⛄️🌬💨💧💦☔️☂️🌊🌫
+    var mojiarray = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷', '🕸', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🐘', '🦏', '🐪', '🐫', '🦒', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🕊', '🐇', '🐁', '🐀', '🐿', '🦔', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🐚', '🌾', '💐', '🌷', '🌹', '🥀', '🌺', '🌸', '🌼', '🌻', '🌞', '🌝', '🌛', '🌜', '🌚', '🌕', '🌙', '🌍', '💫', '⭐️', '🌟', '✨', '⚡️', '☄️', '💥', '🔥', '🌪', '🌈', '☀️', '🌤', '⛅️', '🌥', '☁️', '🌦', '🌧', '⛈', '🌩', '🌨', '❄️', '🌬', '💨', '💧', '💦', '☔️', '☂️', '🌊', '🌫'];
     function spanmegamix() {
       var $ele =  $('#mojimix');
       for (i=0; i<mojiarray.length; i++){
@@ -452,7 +450,6 @@
     var count = 0;
     var thingie = 0;
 
-    var scroll = -20;
     var offset = 48;
     var logMax = 33;
     var redEntries = [];
@@ -507,6 +504,8 @@
       //MESSAGEFORM SUBMIT
       $('.pointsize').click(function(){
         $pointSize = $(this).data('point');
+        $('#sayit').css("fontSize", $pointSize);
+        $('#m').css("fontSize", $pointSize);
       });
 
       $('.button').click(function(){

@@ -5,6 +5,10 @@ var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 
+var fs = require('fs');
+var filenames = fs.readdirSync('client/assets');
+filenames.shift();
+
 var positions = {};
 var users = [];
 var divLog = [];
@@ -15,6 +19,10 @@ app.get('/', function(req, res) {
 
 app.get('/divData', function(req, res){
   res.send(divLog);
+});
+
+app.get('/filenames', function(req, res){
+  res.send(filenames);
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,7 +58,6 @@ io.on('connection', function(socket) {
   });
 
   socket.on('receive_position', function(data) {
-    //console.log('receive_position', data)
     positions[data.id] = data;
     socket.broadcast.emit('update_position', positions[data.id]); // send `data` to all other clients
   });

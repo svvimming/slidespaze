@@ -11,254 +11,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <script src="js/jquery.ui.touch-punch.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body {
-        font-family: 'Roboto', 'Arial';
-        background-image: linear-gradient(315deg, #f24e74, #4ef2d4);
-      }
-      div {
-        font-family: 'Roboto', 'Arial';
-        color: white;
-        font-size: 10pt;
-      }
-
-      form {
-        border: 5px;
-
-      }
-      #userFormArea {
-        position:absolute;
-        width: 80%;
-        top: 50px;
-        left: 5%;
-        z-index: 10;
-      }
-      #userForm {
-        position: absolute;
-        padding: 3px;
-        bottom: 0;
-        width: 100%;
-        z-index: 10;
-        border: 1px #fff solid;
-        border-radius: 10px;
-        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-      }
-      #username {
-        border: 1;
-        border-radius: 10px;
-        padding: 10px;
-        width: 90%;
-        margin-right: .5%;
-        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-      }
-      #messageFormArea {
-        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-        width: 100%;
-        padding: 5px;
-      }
-      #messageForm { padding: 3px; bottom: 0; width: 80%; z-index: -1;}
-      #m {
-        /* left: 10%; */
-        position: relative;
-        border: 1;
-        border-radius: 10px;
-        padding: 10px;
-        width: 40%;
-        margin-right: .5%;
-        background: linear-gradient(70deg, rgba(213,213,213,1) 0%, rgba(255,255,255,1) 10%);
-      }
-
-      form button {
-        width: 9%;
-        background: #00ccff;
-        border: 1;
-        border-radius: 10px;
-        padding: 10px;
-        font-family: 'Roboto', 'Arial';
-        border: 1px #fff solid;
-
-      }
-
-      h2 {
-        font-style: italic;
-      }
-
-      h3 {
-        color: black;
-        font-weight: normal;
-      }
-
-      .synced-draggable {
-        position: absolute;
-        cursor: pointer;
-        cursor: hand;
-        display: inline;
-        padding: 5px;
-      }
-
-      .button {
-        width: 5%;
-        height: 29px;
-        border: none;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        z-index: 1;
-      }
-
-      .pointsize {
-        padding: 10px;
-        width: 5%;
-        height: 29px;
-        text-align: center;
-        cursor: pointer;
-        outline: none;
-        background-color: #00ccff;
-        border: none;
-      }
-
-      .pointsize:hover {
-        background-color: #00a5cf;
-      }
-
-      .pointsize:active {
-        background-color: #00a5cf;
-        transform: translateY(2px);
-      }
-
-      .pointsize:focus {
-        background-color: #45d9ff;
-        font-weight: bold;
-      }
-
-      .sticky {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        padding: 5px;
-      }
-
-      .threads{
-        height:250px;
-        width: 250px;
-        word-wrap: break-all;
-      }
-
-      #messageFormArea {
-        display: none;
-        position: fixed;
-        bottom: 0;
-      }
-
-      #thingieBank{
-        display: none;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        color: white;
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-        width: 30%;
-        height: 85%;
-        overflow-x: hidden;
-        overflow-y: scroll;
-        z-index: 1;
-        background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(45,51,253,1) 100%);
-      }
-
-      #slideSpAZe{
-        position: fixed;
-        padding: 10px;
-        width: 100%;
-        height: 100%;
-        background-color: transparent;
-        left: 0;
-        z-index: 0;
-        overflow: hidden;
-      }
-
-      #userlist{
-        -ms-transform: rotate(20deg);
-        -webkit-transform: rotate(20deg);
-        transform: rotate(20deg);
-        position: relative;
-        /* background-color: black; */
-        padding: 10px;
-        width: 300px;
-        height: 300px;
-        left: 250px;
-        top: 200px;
-        z-index: 1;
-      }
-
-      #creaturez {
-        position: relative;
-        top: 0px;
-        left: 0px;
-      }
-
-      #p5canvas {
-        position: fixed;
-        width: 70%;
-        height: 95%;
-        left: 0;
-        top: 0;
-        z-index: -10;
-      }
-
-      #blueTag{
-        /* background-color: #00ccff; */
-        background: linear-gradient(70deg, rgba(46,252,255,1) 0%, rgba(13,171,233,1) 100%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-        top: 90px;
-        z-index: 1;
-      }
-
-      #redTag{
-        background: linear-gradient(70deg, rgba(255,202,212,1) 0%, rgba(255,0,46,1) 70%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-        top: 90px;
-        z-index: 1;
-      }
-
-      #yellowTag{
-        background: linear-gradient(70deg, rgba(249,255,46,1) 0%, rgba(233,199,13,1) 100%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-        top: 90px;
-        z-index: 1;
-      }
-
-      #bluebtn{
-        background: linear-gradient(70deg, rgba(46,252,255,1) 0%, rgba(13,171,233,1) 100%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-      }
-
-      #redbtn{
-        background: linear-gradient(70deg, rgba(255,202,212,1) 0%, rgba(255,0,46,1) 70%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-      }
-
-      #yellowbtn{
-        background: linear-gradient(70deg, rgba(249,255,46,1) 0%, rgba(233,199,13,1) 100%);
-        padding: 10px;
-        border: 1px #fff solid;
-        border-radius: 10px;
-      }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/slidespz.css">
   </head>
   <body>
 
@@ -272,11 +25,11 @@
       <div id="yellowTag" style="position: sticky; width: fit-content;"><h3>mango</h3></div>
     </div>
 
-    <div id="slideSpAZe" class="well">
+    <div id="slideSpAZe">
 
       <div id="userFormArea">
         <form id="userForm" action="">
-          <input id="username" autocomplete="off" type="text" onclick="spanmegamix()"/><button>login</button>
+          <input id="username" autocomplete="off" type="text" onclick="spanmegamix(); stickmix();"/><button>login</button>
         </form>
       </div>
 
@@ -285,151 +38,35 @@
         <ul class = "list-group" id="users" style="font-style: italic;"></ul>
       </div>
 
-      <div id="thingieBank" >
-        <div style="position: -webkit-sticky; position: sticky; top: 0;"><h2> thingiessss!! </h2></div>
-
-
-        <div id="claybowl" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/claybowl.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-          <br><br><br>
-        <div id="beblm" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/beblm.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-          <br><br><br>
-        <div id="sponges" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/sponges.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-          <br><br><br>
-        <div id="wiggli" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/wiggli.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-            <br><br><br>
-        <div id="purple" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/thingyyyypurpllle.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-            <br><br><br>
-          <div id="grog" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/grog.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-            <br><br><br>
-            <div id="compost" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/compost.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-              <br><br><br>
-            <div id="cephskin" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/cephskin.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-              <br><br><br>
-            <div id="chairshark" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/chairshark.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-              <br><br><br>
-              <div id="posters" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/posters.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-                <br><br><br>
-              <div id="polkaslink" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/polkaslink.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-                <br><br><br>
-              <div id="pinkpatch" style="background-color: transparent; position: relative; left: 25%;" onclick="slideThingie(this.id);"><img src="http://3e-pr0cess-s33dbank.com/thingies/pinkpatch.png" alt="opsie" style="height: 150px; width: 150px;"/></div>
-
-        </div>
+      <div id="thingieBank">
+        <div style="position: -webkit-sticky; position: sticky; top: 0;"><h2 onclick="thingieDrawer()" class="drawer"> thingiessss!! </h2></div>
+      </div>
 
     </div>
 
     <div id="p5Canvas">
-      <script>
-      let growth;
-      let splash;
-      let glooper;
-      let globz = [];
-      var globNum = 10;
-
-      class Glob {
-       constructor(canvas, rad, xrot, yrot, xpos, ypos, xrate, yrate, red, grn, blu) {
-         this.canvas = canvas;
-         this.rad = rad;
-         this.xrot = xrot;
-         this.yrot = yrot;
-         this.xpos = xpos;
-         this.ypos = ypos;
-         this.xrate = xrate;
-         this.yrate = yrate;
-         this.red = red;
-         this.grn = grn;
-         this.blu = blu;
-       }
-        gloop(){
-          fill(this.red, this.grn, this.blu);
-          sphere(this.rad, 24, 24);
-        }
-         move() {
-           var xdummy = this.xpos - 600;//((millis()*this.xrate) % this.canvas) - this.xpos - 600;
-           var ydummy = ((-1)*(millis()*this.yrate) % this.canvas) - this.ypos +700;
-           translate(xdummy, ydummy);
-         }
-         rot_ate(){
-           rotateX((millis()/1000)*(PI / (this.xrot)) + radians(180));
-           rotateY((millis()/1000)*(PI / (this.yrot)));
-         }
-      }
-
-      function setup() {
-        createCanvas(windowWidth, windowHeight, WEBGL);
-        for(let i = 0; i < globNum; i++) {
-          globz[i] = new Glob(
-            windowWidth,
-            random(50, 100),
-            random(6,40),
-            random(6,40),
-            random(0, 1200),
-            random(0, 700),
-            random(0.1, 0.3),
-            random(0.1, 0.2),
-            random(170, 250),
-            random(170, 250),
-            random(170, 250)
-          );
-          globz[i+globNum] = new Glob(
-            windowWidth,
-            random(10, 25),
-            random(6,40),
-            random(6,40),
-            random(0, 1000),
-            random(0, 500),
-            random(0.1, 0.3),
-            random(0.1, 0.2),
-            random(170, 250),
-            random(170, 250),
-            random(170, 250)
-          );
-        }
-      }
-
-      function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-      }
-
-      function draw() {
-        //drag to move the world.
-        orbitControl();
-
-        for(let k = 0; k < globNum*2; k++) {
-          push();
-          globz[k].move();
-          globz[k].rot_ate();
-          globz[k].gloop();
-          pop();
-        }
-      }
-
-      </script>
+      <script src="js/bubbly.js"></script>
     </div>
 
     <div id="messageFormArea" >
-
-
       <div id="mojimix"></div>
-
-    <form id="messageForm" style="position: relative; " action="">
-
-      <input id="m" autocomplete="off"/>
-      <button id="sayit" type="submit" style="width: fit-content;">Send</button>
-      <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red; ">
-      <button id="yellowbtn" type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
-      <button id="bluebtn" type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
-        <button id="tiny" type="button"  class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="12pt">tiny</button>
-        <button id="inbetween" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="22pt">inbetween</button>
-        <button id="huGe" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="42pt">huGe</button>
-    </form>
-<!--
-    <div>
-
-    </div> -->
+        <form id="messageForm" style="position: relative; " action="">
+          <input id="m" autocomplete="off"/>
+          <button id="sayit" type="submit" style="width: fit-content;">Send</button>
+          <button id="redbtn" type="button" class="button" data-color="red" style="background-color: red; ">
+          <button id="yellowbtn" type="button" class="button" data-color="#ffcc00" style="background-color: #ffcc00;">
+          <button id="bluebtn" type="button" class="button" data-color="#00ccff" style="background-color: #00ccff;">
+            <button id="tiny" type="button"  class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="12pt">tiny</button>
+            <button id="inbetween" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="22pt">inbetween</button>
+            <button id="huGe" type="button" class="pointsize" style="position: relative; width: fit-content; color: white;" data-point="42pt">huGe</button>
+        </form>
     </div>
 
     <script>
     var mojiarray = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷', '🕸', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🐘', '🦏', '🐪', '🐫', '🦒', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🕊', '🐇', '🐁', '🐀', '🐿', '🦔', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🐚', '🌾', '💐', '🌷', '🌹', '🥀', '🌺', '🌸', '🌼', '🌻', '🌞', '🌝', '🌛', '🌜', '🌚', '🌕', '🌙', '🌍', '💫', '⭐️', '🌟', '✨', '⚡️', '☄️', '💥', '🔥', '🌪', '🌈', '☀️', '🌤', '⛅️', '🌥', '☁️', '🌦', '🌧', '⛈', '🌩', '🌨', '❄️', '🌬', '💨', '💧', '💦', '☔️', '☂️', '🌊', '🌫'];
+    // var stickerzArray = ['gremlin2', 'image', 'beblm', 'cephskin', 'chairshark', 'claybowl', 'compost', 'grog', 'pinkpatch', 'polkaslink', 'posters', 'purple', 'sponges', 'wiggli', 'crispy', 'grenadilla', 'reddd', 'nagai', 'mindgame', 'god', 'godsmoking'];
+    var stickerzArray;
+
     function spanmegamix() {
       var $ele =  $('#mojimix');
       for (i=0; i<mojiarray.length; i++){
@@ -442,6 +79,28 @@
       var $entry = $('#m').val();
       $('#m').val($entry+moji);
     }
+
+    $.get('/filenames', function(data){
+      stickerzArray = data;
+    });
+
+    function stickmix() {
+      var $ele = $('#thingieBank');
+      for (i=0; i<stickerzArray.length; i++) {
+        $ele.append('<div id="sticker'+i+'" style="background-color: transparent; position: relative; float: left;" onclick="slideThingie(this.id)"><img src="assets/'+stickerzArray[i]+'" alt="opsie" class="stuck"/></div>');
+      }
+    }
+
+    function thingieDrawer() {
+      var bank = $('#thingieBank');
+      var width = bank.css("width");
+      if (width=='480px'){
+        $('#thingieBank').animate({width: '142px', height: '42px'});
+      } else {
+        $('#thingieBank').animate({width: '480px', height: '600px'});
+      }
+    }
+
     </script>
 
     <script>
@@ -471,7 +130,7 @@
             left: $div.x+"px",
             top: $div.y+"px",
             color: $div.color,
-            fontSize: $div.point, //CSS SYNTAX FOR FONT SIZE *******************
+            fontSize: $div.point,
             zIndex: "1"
           });
           $($item).draggable({
@@ -686,6 +345,15 @@
           blueEntries.splice(blueEntries.indexOf(div), 1);
         }
       }
+
+      // function resize(id) {
+      //   var $divID = '#'+id;
+      //   var img = $($divID).children();
+      //
+      //   img.addClass("stickerz");
+      //   // img.css("width", "150px");
+      //   console.log(img);
+      // }
 
       function slideThingie(id){
         var $divID = '#'+id;

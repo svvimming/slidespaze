@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -13,6 +14,11 @@ var positions = {};
 var users = [];
 var divLog = [];
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static('client'));
+app.use(cors());
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/client/');
 });
@@ -24,10 +30,6 @@ app.get('/divData', function(req, res){
 app.get('/filenames', function(req, res){
   res.send(filenames);
 });
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(express.static('client'));
 
 app.post('/divs', function(req, res) {
   var data = req.body;
